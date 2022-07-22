@@ -6,8 +6,6 @@ import time
 
 bot = telebot.TeleBot(config.BOT_TOKEN)
 
-# Начало диалога
-
 
 @bot.message_handler(commands=["start"])
 def cmd_start(message):
@@ -33,9 +31,6 @@ def cmd_start(message):
     dbworker.set_state(message.chat.id, config.States.S_ENTER_NAME.value)
 
 
-# По команде /reset будем сбрасывать состояния, возвращаясь к началу диалога
-
-
 @bot.message_handler(commands=["reset"])
 def cmd_reset(message):
     bot.send_message(
@@ -43,7 +38,8 @@ def cmd_reset(message):
     dbworker.set_state(message.chat.id, config.States.S_ENTER_NAME.value)
 
 
-@bot.message_handler(func=lambda message: dbworker.get_current_state(message.chat.id) == config.States.S_ENTER_NAME.value)
+@bot.message_handler(func=lambda message: dbworker.get_current_state(message.chat.id)
+                     == config.States.S_ENTER_NAME.value)
 def user_entering_name(message):
     # В случае с именем не будем ничего проверять, пусть хоть "25671", хоть Евкакий
     global name
@@ -53,7 +49,8 @@ def user_entering_name(message):
     dbworker.set_state(message.chat.id, config.States.S_ENTER_ANSWER.value)
 
 
-@bot.message_handler(func=lambda message: dbworker.get_current_state(message.chat.id) == config.States.S_ENTER_ANSWER.value)
+@bot.message_handler(func=lambda message: dbworker.get_current_state(message.chat.id)
+                     == config.States.S_ENTER_ANSWER.value)
 def user_entering_answer(message):
     if message.text.lower() == "да":
         bot.send_message(
@@ -69,7 +66,8 @@ def user_entering_answer(message):
         return
 
 
-@bot.message_handler(func=lambda message: dbworker.get_current_state(message.chat.id) == config.States.S_ENTER_LEN_PASS.value)
+@bot.message_handler(func=lambda message: dbworker.get_current_state(message.chat.id)
+                     == config.States.S_ENTER_LEN_PASS.value)
 def user_entering_len_pass(message):
     if message.text.isdigit() and int(message.text) > 0 and int(message.text) < 999:
         global len_pass
@@ -93,7 +91,8 @@ def user_entering_len_pass(message):
         return
 
 
-@bot.message_handler(func=lambda message: dbworker.get_current_state(message.chat.id) == config.States.S_SYMBHOLS.value)
+@bot.message_handler(func=lambda message: dbworker.get_current_state(message.chat.id)
+                     == config.States.S_SYMBHOLS.value)
 def user_entering_sybbols(message):
     if message.text.isdigit():
         choice_pass = list(message.text)
